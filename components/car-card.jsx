@@ -11,11 +11,13 @@ import { toggleSavedCar } from '@/actions/car-listing';
 import useFetch from '@/hooks/use-fetch';
 import { toast } from 'sonner';
 import { useAuth } from '@clerk/nextjs';
+import Link from 'next/link';
 
 const CarCard = ({ car }) => {
-     const [isSaved, setIsSaved] = useState(car.wishlisted);
+    const [isSaved, setIsSaved] = useState(car.wishlisted);
     const router = useRouter();
     const { isSignedIn } = useAuth();
+    const [isViewing, setIsViewing] = useState(false);
 
      const {
     loading: isToggling,
@@ -52,6 +54,17 @@ const CarCard = ({ car }) => {
     // Call the toggleSavedCar function using our useFetch hook
     await toggleSavedCarFn(car.id);
   };
+
+  const handleViewCar = async () => {
+   if (!isSignedIn) {
+    toast.error("Please sign in to view car details");
+    router.push("/sign-in");
+    return;
+  }
+
+  setIsViewing(true);
+  router.push(`/cars/${car.id}`);
+};
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition group pt-3 pb-0">
@@ -116,13 +129,18 @@ const CarCard = ({ car }) => {
 
         <div className='flex justify-between'>
             <Button
-            className="flex-1"
-            onClick={() => {
-              router.push(`/cars/${car.id}`);
-            }}
-          >
-            View Car
-          </Button>
+  className="flex-1"
+  onMouseEnter={() => router.prefetch(`/cars/${car.id}`)} // Prefetch for speed
+  onClick={handleViewCar}
+  disabled={isViewing}
+>
+  {isViewing ? (
+    <Loader2 className="h-4 w-4 animate-spin" />
+  ) : (
+    "View Car"
+  )}
+</Button>
+
         </div>
         </CardContent>
     </Card>

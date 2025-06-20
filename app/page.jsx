@@ -58,11 +58,12 @@ const featuredCars = await getFeaturedCars();
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold">Browse by Make</h2>
-          <Button variant="ghost" className="flex items-center" asChild>
-            <Link href="/cars">
+          <Link href="/cars">
+          <Button variant="ghost" className="flex items-center">
                 View All <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
               </Link>
-          </Button>
+          
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
